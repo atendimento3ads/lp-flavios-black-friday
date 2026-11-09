@@ -122,12 +122,9 @@ section{position:relative}
 /* Vitrine de categorias */
 .cats{display:grid;grid-template-columns:repeat(6,1fr);gap:20px}
 .cat{grid-column:span 2;display:flex;flex-direction:column;background:#fff;color:var(--navy);border:1px solid #e3ebf7;border-radius:var(--radius);overflow:hidden;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;text-align:left;padding:0}
-.cat:nth-child(4),.cat:nth-child(5){grid-column:span 3}
+.cat:nth-child(4){grid-column:2/span 2}.cat:nth-child(5){grid-column:4/span 2}
 .cat:hover{transform:translateY(-4px);border-color:rgba(47,107,255,.6);box-shadow:0 24px 50px -20px rgba(47,107,255,.45)}
 .cat-media{position:relative;background:#fff;border-bottom:1px solid #eef2f8;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.cat:nth-child(4),.cat:nth-child(5){flex-direction:row}
-.cat:nth-child(4) .cat-media,.cat:nth-child(5) .cat-media{aspect-ratio:auto;width:48%;flex:none}
-.cat:nth-child(4) .cat-body,.cat:nth-child(5) .cat-body{justify-content:center}
 .cat-media img{width:78%;height:88%;object-fit:contain;transition:transform .4s ease}
 .cat:hover .cat-media img{transform:scale(1.06) rotate(-2deg)}
 .cat-media .flag{position:absolute;top:14px;left:14px;background:var(--navy);color:#fff;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:7px 11px;border-radius:999px;z-index:2}
@@ -146,12 +143,10 @@ section{position:relative}
 .cat-body{padding:24px 24px 26px;display:flex;flex-direction:column;gap:6px;flex:1}
 .cat-name{font-family:var(--font-display);font-weight:700;font-size:26px;letter-spacing:-.03em}
 .cat-price{font-weight:600;font-size:14px;color:#5a6b8f}
-.cat-price strong{display:block;font-family:var(--font-display);font-weight:800;font-size:34px;color:var(--primary);letter-spacing:-.03em;line-height:1.1;margin-top:2px}
+.cat-price strong{display:block;white-space:nowrap;font-family:var(--font-display);font-weight:800;font-size:clamp(24px,2.3vw,34px);color:var(--primary);letter-spacing:-.03em;line-height:1.1;margin-top:2px}
 .cat-price .tbd{font-size:.55em}
 .cat-media.offer-media{background:#0f2246}
 .cat-media img.is-offer{width:100%;height:100%;object-fit:cover}
-.cat:nth-child(4) .cat-media.offer-media{background:linear-gradient(180deg,#142233,#162f4f)}
-.cat:nth-child(4) .cat-media img.is-offer{object-fit:contain;-webkit-mask:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent)}
 .cat:hover .cat-media img.is-offer{transform:scale(1.05)}
 .cat-prod{display:block;font-weight:700;color:var(--navy);font-size:15px;margin-bottom:4px}
 .cat-price s{display:block;color:#8a97b3;font-size:13px}
@@ -308,9 +303,7 @@ footer{border-top:1px solid var(--border);padding:64px 0 120px;color:var(--t3);f
   .sec{padding:72px 0}
   .cats{grid-template-columns:1fr 1fr;gap:14px}
   .cat,.cat:nth-child(4),.cat:nth-child(5){grid-column:span 1}
-  .cat:nth-child(5){grid-column:span 2}
-  .cat:nth-child(4){flex-direction:column}
-  .cat:nth-child(4) .cat-media{aspect-ratio:4/3;width:auto}
+  .cat:nth-child(5){grid-column:1/-1;justify-self:center;width:calc(50% - 7px)}
   .pay-card{grid-template-columns:1fr;padding:36px 24px;gap:20px}
   .card-visual{margin:10px auto 0;max-width:320px;order:-1}
   .card-official{order:-1}
@@ -337,7 +330,7 @@ footer{border-top:1px solid var(--border);padding:64px 0 120px;color:var(--t3);f
   .cat-body{padding:16px 14px 16px}
   .cat-name{font-size:18px}
   .cat-price{font-size:13px}
-  .cat-price strong{font-size:24px}
+  .cat-price strong{font-size:20px}
   .cat-price strong:has(small){font-size:20px;white-space:nowrap}
   .cat-price strong small{display:block;margin:0;font-size:.6em}
   .cat-prod{font-size:13px}
@@ -359,7 +352,7 @@ footer{border-top:1px solid var(--border);padding:64px 0 120px;color:var(--t3);f
 }
 @media (max-width:340px){
   .cats{grid-template-columns:1fr}
-  .cat:nth-child(5){grid-column:span 1}
+  .cat:nth-child(5){grid-column:span 1;width:auto}
 }
 </style>
 </head>
@@ -471,7 +464,7 @@ footer{border-top:1px solid var(--border);padding:64px 0 120px;color:var(--t3);f
       </button>
       <!-- COPY: Acessórios -->
       <button class="cat reveal js-open" data-cat="acessorios">
-        <div class="cat-media"><span class="flag">Black <b>Flávio's</b></span><img src="assets/oferta-cat-acessorios.webp" alt="Carteira Feminina Alice Palucci" loading="lazy" width="640" height="640"></div>
+        <div class="cat-media"><span class="flag">Black <b>Flávio's</b></span><img class="is-offer" src="assets/oferta-cat-acessorios.webp" alt="Carteira Feminina Alice Palucci" loading="lazy" width="640" height="640"></div>
         <div class="cat-body">
           <span class="cat-name">Acessórios</span>
           <span class="cat-price"><span class="cat-prod">Carteira Feminina Alice Palucci</span><s>De R$ 69,90</s><strong>por R$ 29,90</strong></span>

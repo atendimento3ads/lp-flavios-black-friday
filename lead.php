@@ -77,20 +77,59 @@ foreach ($keys as $key) {
 date_default_timezone_set('America/Sao_Paulo');
 $dir = '/home2/hg3ads37/flavios-leads-private';
 $path = $dir . '/leads.csv';
+$webappPath = $dir . '/sheet-webapp-url.txt';
+$webappUrl = is_file($webappPath) ? trim((string) file_get_contents($webappPath)) : '';
+if (!preg_match('~^https://script\.google\.com/macros/s/[A-Za-z0-9_-]+/exec$~', $webappUrl)
+    || !function_exists('curl_init')) {
+    reply(503, false);
+}
+
+// A planilha é o destino principal. Só confirmamos o cadastro após o Apps Script
+// informar que gravou a linha; o CSV local permanece como cópia de segurança.
+$payload = [
+    'nome' => $name,
+    'telefone' => $phone,
+    'categoria' => $category,
+    'optin_comunicacoes' => !empty($data['optin_comunicacoes']),
+];
+foreach ($keys as $key) {
+    $payload[$key] = cleanField($data[$key] ?? '', 255);
+}
+$request = curl_init($webappUrl);
+curl_setopt_array($request, [
+    CURLOPT_POST => true,
+    CURLOPT_POSTFIELDS => json_encode($payload, JSON_UNESCAPED_UNICODE),
+    CURLOPT_HTTPHEADER => ['Content-Type: application/json; charset=utf-8'],
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_MAXREDIRS => 3,
+    CURLOPT_CONNECTTIMEOUT => 5,
+    CURLOPT_TIMEOUT => 18,
+    CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
+    CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTPS,
+]);
+$sheetResponse = curl_exec($request);
+$sheetCode = curl_getinfo($request, CURLINFO_RESPONSE_CODE);
+curl_close($request);
+$sheetResult = is_string($sheetResponse) ? json_decode($sheetResponse, true) : null;
+if ($sheetCode !== 200 || !is_array($sheetResult) || ($sheetResult['ok'] ?? false) !== true) {
+    reply(502, false);
+}
+
 umask(0077);
 if (!is_dir($dir) && !mkdir($dir, 0700, true)) {
-    reply(500, false);
+    reply(201, true);
 }
 chmod($dir, 0700);
 
 $file = fopen($path, 'c+');
 if ($file === false) {
-    reply(500, false);
+    reply(201, true);
 }
 chmod($path, 0600);
 if (!flock($file, LOCK_EX)) {
     fclose($file);
-    reply(500, false);
+    reply(201, true);
 }
 
 fseek($file, 0, SEEK_END);
@@ -104,4 +143,4 @@ $row = array_merge(
 $saved = fputcsv($file, $row, ',', '"', '') !== false && fflush($file);
 flock($file, LOCK_UN);
 fclose($file);
-reply($saved ? 201 : 500, $saved);
+reply(201, true);

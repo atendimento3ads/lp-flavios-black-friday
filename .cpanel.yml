@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home2/hg3ads37/black.flavios.com.br/
+    - /bin/cp -f index.html lead.php "$DEPLOYPATH"
+    - /bin/cp -Rf assets "$DEPLOYPATH"
